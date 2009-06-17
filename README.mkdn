@@ -1,0 +1,46 @@
+Doumeki
+================
+
+Doumeki is photo uploader for Eye-Fi that uploads into multi photo storage
+services (Local, Flickr and so on).
+
+    (TBC..)            (TBC..)
+    Sumgmug   Flickr   Facebook  You can add!
+       ^          ^     ^          ^
+       |          |     |          |
+       |        +---------+        |
+       +--------| Doumeki |--------+
+                +---------+\
+                     ^      ----> Local
+                     |
+            (Gallery Remote 2)
+                     |
+        Eye-Fi ------+
+        Server
+          ^
+          |      /-------+
+          |      |       |
+          +------| Eye-Fi|
+                 | card  |
+                 +-------+
+
+
+INSTALLATION
+----------------
+
+To install this module, run the following commands:
+
+    git clone git://github.com/hirose31/doumeki.git
+    cd doumeki
+    cpan -i .
+    ./bin/doumeki-server.pl
+
+
+COPYRIGHT AND LICENCE
+----------------
+
+Copyright (C) 2009 HIROSE Masaaki
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+

@@ -1,0 +1,23 @@
+server:
+  port: 10808
+  host: 127.0.0.1
+
+receiver:
+  GR2:
+    user:     scott
+    password: tiger
+
+store:
+  Local:
+    base_dir: /storage/photos
+
+  Flickr:
+    key:        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    secret:     XXXXXXXXXXXXXXXX
+    auth_token: XXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXX
+    tags:
+      - doumeki
+      - eye-fi
+    is_public: 0
+    is_friend: 0
+    is_family: 1
