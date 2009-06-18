@@ -18,14 +18,6 @@ has 'conf'  => (
     is => 'rw',
 );
 
-has 'engine' => (
-    is      => 'rw',
-    isa     => 'HTTP::Engine',
-    lazy    => 1,
-    builder => 'build_engine',
-    handles => [ qw(run) ],
-);
-
 __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
@@ -61,7 +53,7 @@ sub BUILD {
     return $self;
 }
 
-sub build_engine {
+sub run {
     my $self = shift;
 
     Doumeki::Log->log(debug => "Initializing with HTTP::Engine version $HTTP::Engine::VERSION");
@@ -117,13 +109,14 @@ sub build_engine {
         }
     }
 
-    return HTTP::Engine->new(
+    my $engine= HTTP::Engine->new(
         interface => {
             module => 'ServerSimple',
             args   => $self->conf,
             request_handler => $mw->handler( sub {$receiver->handle_request(@_) } ),
         },
     );
+    $engine->run;
 }
 
 1;
