@@ -13,6 +13,7 @@ use Doumeki::Server;
 
 has '+configfile' => (
     default => "config.yaml",
+    cmd_aliases => 'f',
 );
 
 has 'receiver' => (
@@ -48,9 +49,11 @@ has 'port' => (
 );
 
 has 'debug' => (
-    is       => 'rw',
-    isa      => 'Bool',
-    default  => 0,
+    traits      => [ 'Getopt' ],
+    cmd_aliases => 'd',
+    is          => 'rw',
+    isa         => 'Bool',
+    default     => 0,
 );
 
 has 'help' => (

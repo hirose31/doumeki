@@ -15,22 +15,28 @@ doumeki-server - Doumeki web server
 
 =head1 SYNOPSIS
 
-  doumeki-server.pl --host=HOST --port=PORT
+  doumeki-server.pl --host=HOST --port=PORT [--configfile CONFIG.yaml] [--debug]
 
   --host HOST
+  -h HOST
     specifies the host address it binds to (e.g. 127.0.0.1). Default to any address.
 
   --port PORT
+  -p PORT
     specifies the port number it listens to. Default: 10808
 
-  --configfile FILENAME.yaml
+  --configfile CONFIG.yaml
+  -c CONFIG.yaml
     specifies configuration file. see also "example/config.yaml".
+
+  --debug
+  -d
+    set log level to debug.
 
 =head1 EXAMPLE
 
-  env DOUMEKI_DEBUG=1 \
-      DOUMEKI_ACCESS_LOG=/var/log/doumeki/doumeki.acc \
-      doumeki-server --configfile /path/to/config.yaml
+  env DOUMEKI_ACCESS_LOG=/var/log/doumeki/doumeki.acc \
+      doumeki-server --configfile /path/to/config.yaml --debug
 
 =head1 ENVIRONMENTAL VARIABLES
 
@@ -38,7 +44,7 @@ doumeki-server - Doumeki web server
 
 =item DOUMEKI_DEBUG
 
-set log level to debug if this variable defined.
+set log level to debug if this variable defined. same as --debug option.
 
 =item DOUMEKI_ACCESS_LOG
 
