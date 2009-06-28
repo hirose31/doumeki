@@ -4,6 +4,7 @@ use warnings;
 use Log::Dispatch;
 use Log::Dispatch::File;
 use Log::Dispatch::Screen::Color;
+use POSIX qw(strftime);
 
 my($logger, $access_logger);
 
@@ -51,6 +52,7 @@ sub log {
 
     my $msg = join(" ", @msg);
     chomp $msg;
+    $msg = strftime("%Y-%m-%d %H:%M:%S", localtime)." $msg";
 
     if ($logger) {
         $logger->log( level => $alias{$level} || $level, message => "$msg\n" );
@@ -64,11 +66,12 @@ sub log_request {
 
     $access_logger->log(
         level => 'info',
-        message => sprintf qq(%s - %s [%s] "%s %s cmd=%s %s" %s %s "%s" "%s"\n),
-            $req->address, ($req->user || '-'), scalar localtime, $req->method,
-            $req->uri->path_query,
-            $req->param("g2_form[cmd]") || "-",
-            $req->protocol, $res->status, ($res->body ? bytes::length($res->body) : "-"),
+        message => sprintf qq(%s %s - %s "%s %s cmd=%s %s" %s %s "%s" "%s"\n),
+            strftime("%Y-%m-%d %H:%M:%S", localtime),
+            $req->address, ($req->user || '-'),
+            $req->method, $req->uri->path_query,
+            $req->param("g2_form[cmd]") || "-", $req->protocol,
+            $res->status, ($res->body ? bytes::length($res->body) : "-"),
             ($req->referer || '-'), ($req->user_agent || '-'),
     );
 }
