@@ -5,6 +5,7 @@ use Any::Moose;
 use HTTP::Engine;
 use HTTP::Engine::Middleware;
 use FindBin;
+use Time::HiRes qw(tv_interval gettimeofday);
 use Data::Dumper;
 $Data::Dumper::Indent   = 1;
 $Data::Dumper::Deepcopy = 1;
@@ -103,7 +104,12 @@ sub run {
         for my $hook (qw(login add_item new_album)) {
             $receiver->add_trigger(
                 name      => $hook,
-                callback  => sub { $store->$hook(@_) },
+                callback  => sub {
+                    my $t0 = [gettimeofday];
+                    my $r = $store->$hook(@_);
+                    Doumeki::Log->log(notice => sprintf "[%-9s] Store::%-10s ... %8.6f [sec]", $hook, $klass, tv_interval($t0));
+                    return $r;
+                },
                 abortable => 1,
                );
         }

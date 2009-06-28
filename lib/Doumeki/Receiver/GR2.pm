@@ -189,7 +189,7 @@ sub add_item {
     if (my $prefix = $param->{set_albumName}) {
         $filename = join '/', $prefix, $filename;
     }
-    Doumeki::Log->log(debug => "add_item: $filename");
+    Doumeki::Log->log(notice => "[add_item ] uploading $filename");
 
     $self->call_trigger('add_item', $upload->tempname, $filename)
         ? $self->success($req, $res, {

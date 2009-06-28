@@ -18,14 +18,14 @@ sub init {
         if ($ENV{DOUMEKI_ERROR_LOG}) {
             $logger->add( Log::Dispatch::File->new(
                 name => 'error_log',
-                min_level => $ENV{DOUMEKI_DEBUG} ? 'debug' : 'warning',
+                min_level => $ENV{DOUMEKI_DEBUG} ? 'debug' : 'notice',
                 filename  => $ENV{DOUMEKI_ERROR_LOG} . "",
                 mode => 'append',
             ));
         } else {
             $logger->add( Log::Dispatch::Screen::Color->new(
                 name => 'error_log',
-                min_level => $ENV{DOUMEKI_DEBUG} ? 'debug' : 'warning',
+                min_level => $ENV{DOUMEKI_DEBUG} ? 'debug' : 'notice',
             ));
         }
 

@@ -16,6 +16,7 @@ requires 'Path::Class';
 requires 'Readonly';
 requires 'UNIVERSAL::require';
 requires 'YAML::XS';
+requires 'Time::HiRes';
 
 requires 'Flickr::Upload';
 
