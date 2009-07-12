@@ -26,6 +26,11 @@ has 'store' => (
     isa         => 'HashRef',
 );
 
+has 'notify' => (
+    is          => 'rw',
+    isa         => 'HashRef',
+);
+
 has 'engine' => (
     is          => 'rw',
     isa         => 'HashRef',
@@ -96,6 +101,7 @@ sub run {
         debug    => $self->debug,
         engine   => $self->engine,
         store    => $self->store,
+        notify   => $self->notify,
         receiver => $self->receiver,
     });
 }

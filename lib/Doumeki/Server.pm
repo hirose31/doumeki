@@ -97,21 +97,25 @@ sub run {
 
     Doumeki::Log->log(debug => "build_engine, self->conf: ".Dumper($self->conf));
 
-    for my $klass (keys %{ $self->conf->{store} }) {
-        my $module = 'Doumeki::Store::'.$klass;
-        $module->require;
-        my $store = $module->new(%{$self->conf->{store}{$klass}});
-        for my $hook (qw(login add_item new_album)) {
-            $receiver->add_trigger(
-                name      => $hook,
-                callback  => sub {
-                    my $t0 = [gettimeofday];
-                    my $r = $store->$hook(@_);
-                    Doumeki::Log->log(notice => sprintf "[%-9s] Store::%-10s ... %8.6f [sec]", $hook, $klass, tv_interval($t0));
-                    return $r;
-                },
-                abortable => 1,
-               );
+    for my $type (qw(notify store)) {
+        my $Type = ucfirst $type;
+
+        for my $klass (keys %{ $self->conf->{$type} }) {
+            my $module = "Doumeki::${Type}::${klass}";
+            $module->require;
+            my $type = $module->new(%{$self->conf->{$type}{$klass}});
+            for my $hook (qw(login add_item new_album)) {
+                $receiver->add_trigger(
+                    name      => $hook,
+                    callback  => sub {
+                        my $t0 = [gettimeofday];
+                        my $r = $type->$hook(@_);
+                        Doumeki::Log->log(notice => sprintf "[%-9s] ${Type}::%-10s ... %8.6f [sec]", $hook, $klass, tv_interval($t0));
+                        return $r;
+                    },
+                    abortable => 1,
+                   );
+            }
         }
     }
 

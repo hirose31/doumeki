@@ -21,3 +21,20 @@ store:
     is_public: 0
     is_friend: 0
     is_family: 1
+
+notify:
+  XMPP: # jabber.org
+    jid: notifier@jabber.org
+    password: XXXXXXXX
+    to:
+      - your_account@gmail.com
+      - your_account2@jabber.org
+
+# XMPP: # google talk
+#   jid: notifier@gmail.com
+#   password: XXXXXXXX
+#   server_host: talk.google.com
+#   tls: 1
+#   to:
+#     - your_account@gmail.com
+#     - your_account2@jabber.org
