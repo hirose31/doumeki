@@ -219,21 +219,53 @@ __END__
 
 =head1 NAME
 
-Doumeki::Notify::XMPP - XMPP class for your new Notify
+Doumeki::Notify::XMPP - notify by XMPP (jabber, Google Talk)
 
 =head1 SYNOPSIS
 
+jabber.org
+
   notify:
-    Local:
-      foo: blah
+    XMPP:
+      jid: your_notifier@jabber.org
+      password: XXXXXXXX
+      to:
+        - your_account@gmail.com
+        - your_account2@jabber.org
+
+Google Talk
+
+  notify:
+    XMPP:
+      jid: your_notifier@gmail.com
+      password: XXXXXXXX
+      server_host: talk.google.com
+      tls: 1
+      to:
+        - your_account@gmail.com
+        - your_account2@jabber.org
 
 =head1 ATTRIBUTES
 
 =over 4
 
-=item foo: Str
+=item jid: Str (required)
 
-...
+=item password: Str (required)
+
+=item server_host: Str
+
+default: domain part of jid.
+
+=item server_port: Int
+
+defalt: 5222
+
+=item tls: Bool
+
+default: 0
+
+=item to: ArrayRef[Str] (required)
 
 =back
 
