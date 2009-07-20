@@ -97,8 +97,9 @@ sub run {
 
     Doumeki::Log->log(debug => "build_engine, self->conf: ".Dumper($self->conf));
 
-    for my $type (qw(notify store)) {
+    for my $type (qw(store notify)) {
         my $Type = ucfirst $type;
+        my $abortable = $type eq "notify" ? 0 : 1;
 
         for my $klass (keys %{ $self->conf->{$type} }) {
             my $module = "Doumeki::${Type}::${klass}";
@@ -113,7 +114,7 @@ sub run {
                         Doumeki::Log->log(notice => sprintf "[%-9s] ${Type}::%-10s ... %8.6f [sec]", $hook, $klass, tv_interval($t0));
                         return $r;
                     },
-                    abortable => 1,
+                    abortable => $abortable,
                    );
             }
         }
