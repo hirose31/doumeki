@@ -4,8 +4,8 @@ Doumeki
 Doumeki is photo uploader for Eye-Fi that uploads into multi photo storage
 services (Local, Flickr and so on).
 
-    (TBC..)            (TBC..)
-    Sumgmug   Flickr   Facebook  You can add!
+                       (TBC..)
+    Gallery2  Flickr   Facebook  You can add!
        ^          ^     ^          ^
        |          |     |          |
        |        +---------+        |
