@@ -22,6 +22,12 @@ store:
     is_friend: 0
     is_family: 1
 
+  Gallery2:
+    url:      http://example.com/gr2/main.php
+    username: scott
+    password: tiger
+    ignore_upload_photo_fail: 1
+
 notify:
   XMPP: # jabber.org
     jid: notifier@jabber.org
