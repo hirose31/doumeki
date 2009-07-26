@@ -85,7 +85,7 @@ sub add_item {
     my($self, $receiver, $tempname, $filename) = @_;
     Doumeki::Log->log(debug => '>>'.(caller(0))[3]);
 
-    my $messge = sprintf "[Doumeki] uploading: %s", $filename;
+    my $messge = sprintf "[Doumeki] uploaded: %s", $filename;
 
     $self->_notify($messge);
     $self->_finalize;
