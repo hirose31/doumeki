@@ -20,6 +20,10 @@ requires 'Time::HiRes';
 
 requires 'Flickr::Upload';
 
+requires 'Net::Amazon::S3';
+
+requires 'WWW::SmugMug::API';
+
 requires_any_moose 'X::AttributeHelpers';
 
 tests 't/*.t';
