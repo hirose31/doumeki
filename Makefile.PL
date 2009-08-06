@@ -20,6 +20,10 @@ requires 'Time::HiRes';
 
 requires 'Flickr::Upload';
 
+requires 'Email::MIME';
+requires 'Email::MIME::Creator';
+requires 'Email::Send';
+
 requires 'Net::Amazon::S3';
 
 requires 'WWW::SmugMug::API';

@@ -25,6 +25,10 @@ sub add_item {
     my($self, $receiver, $tempname, $filename) = @_;
     Doumeki::Log->log(debug => '>>'.(caller(0))[3]);
     # implement me if you need
+
+    my $albumname = "";
+    ($albumname, $filename) = split m{/}, $filename, 2 if $filename =~ m{/};
+
     return 1;
 }
 

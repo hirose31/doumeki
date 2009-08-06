@@ -28,6 +28,15 @@ store:
     password: tiger
     ignore_upload_photo_fail: 1
 
+  Email:
+    mail_from: hirose31@example.com
+    mail_to:
+      - XXXXXXXXXX@f.hatena.ne.jp
+    mail_bcc:
+      - XXXXXXXXXXX@photos.flickr.com
+      - XXXXXXXXXXXXXXXXX@wassr.jp
+    filename_in: body
+
 notify:
   XMPP: # jabber.org
     jid: notifier@jabber.org
