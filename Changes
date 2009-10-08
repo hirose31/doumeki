@@ -1,5 +1,13 @@
 Revision history for Doumeki
 
-0.01 Fri May  1 00:35:24 JST 2009
-        * start
+0.XX  2009-XX-XX
+  * added Notify feature and notify plugin by XMPP.
+  * added new Store: Gallery Remote protocol 2
+  * added new Store: Amazon S3
+  * added new Store: SmugMug
+  * added new Store: Email
+  * added new Store: Ovi http://share.ovi.com/
+
+0.01  2009-05-01
+  * start
 
