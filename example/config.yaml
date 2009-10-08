@@ -22,6 +22,10 @@ store:
     is_friend: 0
     is_family: 1
 
+  Ovi:
+    username: XXXXXXXX
+    password: XXXXXXXX
+
   Gallery2:
     url:      http://example.com/gr2/main.php
     username: scott
