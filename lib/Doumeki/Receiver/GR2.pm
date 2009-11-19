@@ -69,7 +69,11 @@ sub handle_request {
             log  => $req->param("g2_controller"),
         });
     }
+    if (! $param{cmd} && $req->user_agent =~ m{Gallery/.+Darwin}) {
+        $param{cmd} = "add-item";
+    }
 
+    Doumeki::Log->log(debug => "param: ".YAML::XS::Dump(\%param));
     if (! exists $COMMAND_TABLE->{ $param{cmd} }) {
         return $self->error($req, $res, {
             http => { 200 => "Unknown Command" },
@@ -81,7 +85,6 @@ sub handle_request {
         });
     }
 
-    Doumeki::Log->log(debug => YAML::XS::Dump(\%param));
     eval {
         my $method = $COMMAND_TABLE->{ $param{cmd} };
 
