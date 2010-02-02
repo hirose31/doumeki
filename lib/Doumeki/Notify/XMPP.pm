@@ -148,7 +148,7 @@ sub _initialize {
         return;
     }
 
-    {
+    if ($XML::Stream::VERSION <= 1.22) {
         # quick hack to connect Google Talk
         # override XML::Stream-1.22
         no warnings 'redefine';

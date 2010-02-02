@@ -28,6 +28,9 @@ requires 'Net::Amazon::S3';
 
 requires 'WWW::SmugMug::API';
 
+requires 'XML::Stream', '1.23'; # Doumeki::Notify::XMPP
+requires 'Net::XMPP';           # Doumeki::Notify::XMPP
+
 requires_any_moose 'X::AttributeHelpers';
 
 tests 't/*.t';
