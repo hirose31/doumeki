@@ -4,9 +4,9 @@ name     'Doumeki';
 license  'perl';
 all_from 'lib/Doumeki.pm';
 
-requires 'Any::Moose', 0.05;
-requires 'HTTP::Engine', 0.1.8;
-requires 'HTTP::Engine::Middleware', 0.14;
+requires 'Any::Moose', '0.05';
+requires 'HTTP::Engine', '0.02001';
+requires 'HTTP::Engine::Middleware', '0.14';
 requires 'Class::Trigger';
 requires 'FindBin::libs';
 requires 'Log::Dispatch';
@@ -18,18 +18,28 @@ requires 'UNIVERSAL::require';
 requires 'YAML::XS';
 requires 'Time::HiRes';
 
-requires 'Flickr::Upload';
+feature 'Store::Flickr',
+    -default => 0,
+    'Flickr::Upload';
 
-requires 'Email::MIME';
-requires 'Email::MIME::Creator';
-requires 'Email::Send';
+feature 'Store::Email',
+    -default => 0,
+    'Email::MIME',
+    'Email::MIME::Creator',
+    'Email::Send';
 
-requires 'Net::Amazon::S3';
+feature 'Store::S3',
+    -default => 0,
+    'Net::Amazon::S3';
 
-requires 'WWW::SmugMug::API';
+feature 'Store::SmugMug',
+    -default => 0,
+    'WWW::SmugMug::API';
 
-requires 'XML::Stream', '1.23'; # Doumeki::Notify::XMPP
-requires 'Net::XMPP';           # Doumeki::Notify::XMPP
+feature 'Notify::XMPP',
+    -default => 0,
+    'XML::Stream', '1.23',
+    'Net::XMPP';
 
 requires_any_moose 'X::AttributeHelpers';
 
@@ -39,4 +49,5 @@ author_tests('xt');
 build_requires 'Test::More';
 use_test_base;
 auto_include;
+auto_install;
 WriteAll;
