@@ -130,6 +130,11 @@ sub new {
     for (qw(url username password ignore_upload_photo_fail)) {
         $prop{$_} = delete $arg{$_} || "";
     }
+    # add "/main.php" to tail of URL
+    if ($prop{url} !~ /main\.php$/) {
+        $prop{url} =~ s/\/$//;
+        $prop{url} .= "/main.php";
+    }
 
     my $self = bless {
         %prop,
