@@ -10,6 +10,7 @@ receiver:
 store:
   Local:
     base_dir: /storage/photos
+    prefix_shootdate: 1
 
   Flickr:
     key:        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
