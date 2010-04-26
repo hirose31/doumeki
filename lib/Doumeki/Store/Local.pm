@@ -14,6 +14,12 @@ has 'base_dir' => (
     coerce  => 1,
    );
 
+has 'prefix_shootdate' => (
+    is       => 'ro',
+    isa      => 'Bool',
+    default  => 0,
+   );
+
 __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
@@ -29,6 +35,22 @@ sub add_item {
 
     my $tempfile = Path::Class::File->new($tempname);
     my $newfile  = $self->base_dir->file($filename);
+    if ($self->prefix_shootdate) {
+        eval "require Image::ExifTool";
+        if ($@) {
+            Doumeki::Log->log(error => "failed to require Image::ExifTool: $@");
+        } else {
+            my $exif = Image::ExifTool->new;
+            my $info = $exif->ImageInfo($tempname);
+            if (exists $info->{DateTimeOriginal} && $info->{DateTimeOriginal}) {
+                my $prefix = join('', split(/[:\/-]/, (split(/\s+/, $info->{DateTimeOriginal}))[0]));
+                if ($prefix) {
+                    $newfile = $newfile->parent->file($prefix."_".$newfile->basename);
+                }
+            }
+        }
+    }
+
     $newfile->dir->mkpath;
     Doumeki::Log->log(info => "newfile: ".$newfile);
 
@@ -52,6 +74,7 @@ Doumeki::Store::Local - save photos into local disk.
   store:
     Local:
       base_dir: /storage/photos
+      prefix_shootdate: 1
 
 =head1 ATTRIBUTES
 
@@ -61,6 +84,10 @@ Doumeki::Store::Local - save photos into local disk.
 
 base directory for saving photo data.
 actually saved into: "base_dir/YYYY-MM-DD/XXXXX.JPG".
+
+=item prefix_shootdate: Bool
+
+prefix shoot date (YYYYMMDD_) to the filename.
 
 =back
 
