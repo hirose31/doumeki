@@ -1,6 +1,7 @@
 package Doumeki::Receiver::GR2;
 use Any::Moose;
 use Readonly;
+use Path::Class ();
 
 with qw(Doumeki::Receiver::Base);
 
@@ -14,6 +15,12 @@ has 'password' => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
+   );
+
+has 'prefix_shootdate' => (
+    is       => 'ro',
+    isa      => 'Bool',
+    default  => 0,
    );
 
 __PACKAGE__->meta->make_immutable;
@@ -189,9 +196,27 @@ sub add_item {
             },
         });
     }
-    if (my $prefix = $param->{set_albumName}) {
-        $filename = join '/', $prefix, $filename;
+
+    if ($self->prefix_shootdate) {
+        eval "require Image::ExifTool";
+        if ($@) {
+            Doumeki::Log->log(error => "failed to require Image::ExifTool: $@");
+        } else {
+            my $exif = Image::ExifTool->new;
+            my $info = $exif->ImageInfo($upload->tempname);
+            if (exists $info->{DateTimeOriginal} && $info->{DateTimeOriginal}) {
+                my $prefix = join('', split(/[:\/-]/, (split(/\s+/, $info->{DateTimeOriginal}))[0]));
+                if ($prefix) {
+                    $filename = $prefix."_".$filename;
+                }
+            }
+        }
     }
+
+    if (my $albumname = $param->{set_albumName}) {
+        $filename = join '/', $albumname, $filename;
+    }
+
     Doumeki::Log->log(notice => "[add_item ] uploading $filename");
 
     $self->call_trigger('add_item', $upload->tempname, $filename)
@@ -301,3 +326,43 @@ sub error {
 }
 
 1;
+
+=head1 NAME
+
+Doumeki::Receiver::GR2 - receive by GR2
+
+=head1 SYNOPSIS
+
+  receiver:
+    GR2:
+      user: XXXXX
+      password: XXXXX
+      prefix_shootdate: 1
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item user: Str
+
+user name.
+
+=item password: Str
+
+password.
+
+=item prefix_shootdate: Bool
+
+prefix shoot date (YYYYMMDD_) to the filename.
+
+=back
+
+=head1 AUTHOR
+
+HIROSE Masaaki E<lt>hirose31 _at_ gmail.comE<gt>
+
+=head1 SEE ALSO
+
+L<Doumeki>
+
+=cut

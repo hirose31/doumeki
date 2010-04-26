@@ -17,6 +17,7 @@ requires 'Readonly';
 requires 'UNIVERSAL::require';
 requires 'YAML::XS';
 requires 'Time::HiRes';
+requires 'Image::ExifTool';
 
 feature 'Store::Flickr',
     -default => 0,

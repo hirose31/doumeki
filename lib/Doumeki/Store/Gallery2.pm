@@ -67,6 +67,8 @@ sub add_item {
     my($self, $receiver, $tempname, $filename) = @_;
     Doumeki::Log->log(debug => '>>'.(caller(0))[3]);
 
+    $filename = substr($filename, rindex($filename,'/')+1); # =basename
+
     $self->gr2->add_item(
         album    => "",
         filepath => $tempname,

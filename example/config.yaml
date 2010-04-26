@@ -6,11 +6,11 @@ receiver:
   GR2:
     user:     scott
     password: tiger
+    prefix_shootdate: 1
 
 store:
   Local:
     base_dir: /storage/photos
-    prefix_shootdate: 1
 
   Flickr:
     key:        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
