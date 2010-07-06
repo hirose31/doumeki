@@ -197,23 +197,28 @@ sub add_item {
         });
     }
 
+    my @shoot_ymd;
+    eval "require Image::ExifTool";
+    if ($@) {
+        Doumeki::Log->log(error => "failed to require Image::ExifTool: $@");
+    } else {
+        my $exif = Image::ExifTool->new;
+        my $info = $exif->ImageInfo($upload->tempname);
+        if (exists $info->{DateTimeOriginal} && $info->{DateTimeOriginal}) {
+            @shoot_ymd = split(/[:\/-]/, (split(/\s+/, $info->{DateTimeOriginal}))[0]);
+        }
+    }
+
     if ($self->prefix_shootdate) {
-        eval "require Image::ExifTool";
-        if ($@) {
-            Doumeki::Log->log(error => "failed to require Image::ExifTool: $@");
-        } else {
-            my $exif = Image::ExifTool->new;
-            my $info = $exif->ImageInfo($upload->tempname);
-            if (exists $info->{DateTimeOriginal} && $info->{DateTimeOriginal}) {
-                my $prefix = join('', split(/[:\/-]/, (split(/\s+/, $info->{DateTimeOriginal}))[0]));
-                if ($prefix) {
-                    $filename = $prefix."_".$filename;
-                }
-            }
+        if (@shoot_ymd) {
+            $filename = sprintf("%04d%02d%02d",@shoot_ymd)."_".$filename;
         }
     }
 
     if (my $albumname = $param->{set_albumName}) {
+        if ($albumname eq 'SHOOTDATE') {
+            $albumname = sprintf "%04d-%02d-%02d", @shoot_ymd;
+        }
         $filename = join '/', $albumname, $filename;
     }
 
@@ -338,6 +343,8 @@ Doumeki::Receiver::GR2 - receive by GR2
       user: XXXXX
       password: XXXXX
       prefix_shootdate: 1
+
+If name of album is "SHOOTDATE", Doumeki::Receiver::GR2 replaces to shooting date (YYYY-MM-DD).
 
 =head1 ATTRIBUTES
 
