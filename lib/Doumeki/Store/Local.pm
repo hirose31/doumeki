@@ -14,6 +14,12 @@ has 'base_dir' => (
     coerce  => 1,
    );
 
+has 'umask' => (
+    is      => 'rw',
+    isa     => 'Int',
+    default => 0022,
+   );
+
 __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
@@ -26,6 +32,8 @@ sub login {
 sub add_item {
     my($self, $receiver, $tempname, $filename) = @_;
     Doumeki::Log->log(debug => '>>'.(caller(0))[3]);
+
+    umask($self->umask);
 
     my $tempfile = Path::Class::File->new($tempname);
     my $newfile  = $self->base_dir->file($filename);
@@ -52,6 +60,7 @@ Doumeki::Store::Local - save photos into local disk.
   store:
     Local:
       base_dir: /storage/photos
+      umask: 0002
 
 =head1 ATTRIBUTES
 
@@ -62,9 +71,9 @@ Doumeki::Store::Local - save photos into local disk.
 base directory for saving photo data.
 actually saved into: "base_dir/YYYY-MM-DD/XXXXX.JPG".
 
-=item prefix_shootdate: Bool
+=item umask: Int
 
-prefix shoot date (YYYYMMDD_) to the filename.
+umask for create directrory and file. default is 0022.
 
 =back
 
