@@ -213,21 +213,32 @@ __END__
 
 =head1 NAME
 
-Doumeki::Store::Picasa - skeleton class for your new Store
+Doumeki::Store::Picasa - upload into Picasa
 
 =head1 SYNOPSIS
 
   store:
-    Local:
-      foo: blah
+    Picasa:
+      email: XXXXXXXX@gmail.com
+      password: XXXXXXXX
 
 =head1 ATTRIBUTES
 
 =over 4
 
-=item foo: Str
+=item email: Str
 
-...
+Your email address. It must include the domain name.
+
+=item password: Str
+
+Your password.
+
+=item album_access: Str
+
+One of: all, private, public, visible, protected
+
+default is "protected" (only you can see photo).
 
 =back
 
@@ -238,5 +249,9 @@ HIROSE Masaaki E<lt>hirose31 _at_ gmail.comE<gt>
 =head1 SEE ALSO
 
 L<Doumeki>
+
+L<http://code.google.com/intl/en/apis/picasaweb/docs/2.0/developers_guide_protocol.html>
+
+L<http://code.google.com/intl/en/apis/picasaweb/docs/2.0/reference.html>
 
 =cut
