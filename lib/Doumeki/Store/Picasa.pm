@@ -67,11 +67,38 @@ sub _build_ua {
 }
 
 sub _build_album_list {
-    my($slef) = @_;
-    # fixme
-    # my $client = Atompub::Client->new;
-    # return $client;
-    return {};
+    my($self) = @_;
+
+    my $album_list = {};
+
+    my $res = $self->ua->get('http://picasaweb.google.com/data/feed/api/user/default',
+                             'Authorization' => "googlelogin auth=".$self->auth_token->{'auth'},
+                    );
+    $res->code eq '200' or croak "failed to get album list: $!: ".$res->code.' '.$res->content;
+
+    my $dom = XML::LibXML->load_xml(string => $res->content);
+    my $xpc = XML::LibXML::XPathContext->new($dom);
+    $xpc->registerNs('atom','http://www.w3.org/2005/Atom');
+
+    my $nodes = $xpc->findnodes('//atom:entry');
+    Doumeki::Log->log(debug => "nodes: ".$nodes->size);
+    for my $node ($nodes->get_nodelist) {
+        my $title_node = $node->getElementsByTagName('title')->get_node(1);
+        my $albumname = $title_node->textContent;
+        utf8::encode($albumname);
+        Doumeki::Log->log(debug => "album name: $albumname");
+
+        my @links = $node->getElementsByTagName('link')->get_nodelist;
+        for my $link (@links) {
+            if ($link->getAttribute('rel') eq 'http://schemas.google.com/g/2005#feed') {
+                Doumeki::Log->log(debug => "found: " . $link->getAttribute('href'));
+                $album_list->{ $albumname } = $link->getAttribute('href');
+                last;
+            }
+        }
+    }
+
+    return $album_list;
 }
 
 
@@ -118,7 +145,7 @@ sub add_item {
     }
     Doumeki::Log->log(debug => "upload_uri: $upload_uri");
 
-    open my $img_fh, '<', $tempname or die "$!: $tempname";
+    open my $img_fh, '<', $tempname or croak "$!: $tempname";
     binmode $img_fh;
     my $img_data = do { local $/; <$img_fh> };
     close $img_fh;
@@ -131,7 +158,7 @@ sub add_item {
                               'Content'       => $img_data,
                              );
 
-    $res->code eq '200' or carp "$!: ".$res->code.' '.$res->content;
+    $res->code eq '201' or croak "failed to upload photo: $!: ".$res->code.' '.$res->content;
 
     return 1;
 }
@@ -162,6 +189,7 @@ sub new_album {
                                             $self->album_access,
                                            ),
                 );
+        $res->code eq '201' or croak "failed to create album: $!: ".$res->code.' '.$res->content;
 
         my $dom = XML::LibXML->load_xml(string => $res->content);
         my @links = $dom->getElementsByTagName('link');
