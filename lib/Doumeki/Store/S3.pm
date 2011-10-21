@@ -111,13 +111,13 @@ AWS secret
 
 S3 bucket name
 
-=item prefix 
+=item prefix
 
 prefix of S3 key-name.
 
 =item acl
 
-shorthand notation of ACL. 
+shorthand notation of ACL.
 private, public-read, public-read-write, authenticated-read
 
 =back
