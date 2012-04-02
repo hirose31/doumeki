@@ -168,7 +168,7 @@ sub new_album {
     Doumeki::Log->log(debug => '>>'.(caller(0))[3]);
 
     my $upload_uri = $self->album_list->{$albumname} || "";
-    Doumeki::Log->log(debug => "upload_uri in cache: $upload_uri");
+    Doumeki::Log->log(debug => "upload_uri for $albumname: $upload_uri");
 
     if (! $upload_uri) {
         my $request_body = q{<entry xmlns='http://www.w3.org/2005/Atom'
