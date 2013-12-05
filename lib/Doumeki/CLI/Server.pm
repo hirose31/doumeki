@@ -12,6 +12,7 @@ use Doumeki::Log;
 use Doumeki::Server;
 
 has '+configfile' => (
+    metaclass => any_moose('X::Getopt::Meta::Attribute'),
     default => "config.yaml",
     cmd_aliases => 'f',
 );
