@@ -40,6 +40,7 @@ feature 'Store::SmugMug',
 feature 'Notify::XMPP',
     -default => 0,
     'XML::Stream', '1.23',
+    'Net::DNS',
     'Net::XMPP';
 
 requires_any_moose 'X::AttributeHelpers';

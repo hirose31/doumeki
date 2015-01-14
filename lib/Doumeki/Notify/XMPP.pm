@@ -138,6 +138,7 @@ sub _initialize {
             port          => $port,
             tls           => $tls,
             componentname => $componentname,
+            srv           => 1,
            );
         last if defined $status;
         Doumeki::Log->log(warning => "retry[$connectattempts]");
