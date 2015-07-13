@@ -5,33 +5,32 @@ use Carp;
 
 use LWP::UserAgent;
 use XML::LibXML;
+use Net::Google::DataAPI::Auth::OAuth2;
 
 with qw(Doumeki::Store::Base);
 
-has 'email' => (
+has 'client_id' => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
    );
 
-has 'password' => (
+has 'client_secret' => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
    );
 
-# http://code.google.com/intl/en/apis/accounts/docs/AuthForInstalledApps.html
-has 'clientlogin_uri' => (
+has 'refresh_token' => (
     is       => 'ro',
     isa      => 'Str',
-    default  => 'https://www.google.com/accounts/ClientLogin',
     required => 1,
    );
 
-has 'auth_token' => (
+has 'access_token' => (
     is       => 'rw',
-    isa      => 'HashRef[Str]',
-    default  => sub { +{} },
+    isa      => 'Str',
+    default  => '',
    );
 
 has 'ua' => (
@@ -71,8 +70,8 @@ sub _build_album_list {
 
     my $album_list = {};
 
-    my $res = $self->ua->get('http://picasaweb.google.com/data/feed/api/user/default',
-                             'Authorization' => "googlelogin auth=".$self->auth_token->{'auth'},
+    my $res = $self->ua->get('https://picasaweb.google.com/data/feed/api/user/default',
+                             'Authorization' => "OAuth ".$self->access_token
                     );
     $res->code eq '200' or croak "failed to get album list: $!: ".$res->code.' '.$res->content;
 
@@ -106,24 +105,21 @@ sub login {
     my($self) = @_;
     Doumeki::Log->log(debug => '>>'.(caller(0))[3]);
 
-    my $res = $self->ua->post($self->clientlogin_uri,
-                     {
-                         Email       => $self->email,
-                         Passwd      => $self->password,
-                         accountType => 'GOOGLE',
-                         source      => 'Google-Picasa-Upload',
-                         service     => 'lh2',
-                     }
-                    );
-    if ($res->code ne '200') {
-        Doumeki::Log->log(error => 'failed to ClientLogin for ' . $self->email);
-        return;
-    }
-
-    for (split /[\n\r]+/, $res->content) {
-        my($k,$v) = split /=/, $_, 2;
-        $self->auth_token->{lc($k)} = $v;
-    }
+    my $oauth2 = Net::Google::DataAPI::Auth::OAuth2->new(
+        client_id     => $self->client_id,
+        client_secret => $self->client_secret,
+        scope         => ['https://picasaweb.google.com/data/', 'https://www.googleapis.com/auth/drive'],
+    );
+    my $ow = $oauth2->oauth2_webserver;
+    my $token = Net::OAuth2::AccessToken->new(
+        profile       => $ow,
+        auto_refresh  => 1,
+        refresh_token => $self->refresh_token,
+    );
+    $ow->update_access_token($token);
+    $token->refresh;
+    $oauth2->access_token($token);
+    $self->access_token($token->access_token);
 
     return 1;
 }
@@ -141,7 +137,7 @@ sub add_item {
         Doumeki::Log->log(warn => "failed to get album URL for $albumname") unless $upload_uri;
     }
     if (! $upload_uri) {
-        $upload_uri = 'http://picasaweb.google.com/data/feed/api/user/default';
+        $upload_uri = 'https://picasaweb.google.com/data/feed/api/user/default';
     }
     Doumeki::Log->log(debug => "upload_uri: $upload_uri");
 
@@ -154,7 +150,7 @@ sub add_item {
                               'GData-Version' => '2',
                               'Content-Type'  => 'image/jpg',
                               'Slug'          => $filename,
-                              'Authorization' => "googlelogin auth=".$self->auth_token->{'auth'},
+                              'Authorization' => "OAuth ".$self->access_token,
                               'Content'       => $img_data,
                              );
 
@@ -183,7 +179,7 @@ sub new_album {
         my $uri = 'https://picasaweb.google.com/data/feed/api/user/default';
         my $res = $self->ua->post($uri,
                  'Content-Type'  => 'application/atom+xml',
-                 'Authorization' => "googlelogin auth=".$self->auth_token->{'auth'},
+                 'Authorization' => "OAuth ".$self->access_token,
                  'Content'       => sprintf($request_body,
                                             $albumname,
                                             $self->album_access,
@@ -219,20 +215,29 @@ Doumeki::Store::Picasa - upload into Picasa
 
   store:
     Picasa:
-      email: XXXXXXXX@gmail.com
-      password: XXXXXXXX
+      client_id: XXXXXXXX.apps.googleusercontent.com
+      client_secret: XXXXXXXX
+      refresh_token: XXXXXXXX
 
 =head1 ATTRIBUTES
 
 =over 4
 
-=item email: Str
+=item client_id: Str
 
-Your email address. It must include the domain name.
 
-=item password: Str
 
-Your password.
+=item client_secret: Str
+
+
+
+=item refresh_token: Str
+
+
+
+=item access_token: Str
+
+
 
 =item album_access: Str
 
