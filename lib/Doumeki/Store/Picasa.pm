@@ -255,8 +255,8 @@ HIROSE Masaaki E<lt>hirose31 _at_ gmail.comE<gt>
 
 L<Doumeki>
 
-L<http://code.google.com/intl/en/apis/picasaweb/docs/2.0/developers_guide_protocol.html>
+L<https://developers.google.com/picasa-web/>
 
-L<http://code.google.com/intl/en/apis/picasaweb/docs/2.0/reference.html>
+L<https://developers.google.com/picasa-web/docs/2.0/reference>
 
 =cut
